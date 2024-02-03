@@ -1,6 +1,9 @@
 import os
 
-restaurantes = ['Pizza','sushi']
+restaurantes = [
+    {'nome':'Praça','categoria':'Japonesa','ativo':False},
+    {'nome':'Pizza Suprema','categoria':'Pizza','ativo':True},
+    {'nome':'Cantina','categoria':'Italiano','ativo':False}]
 
 def exibir_nome_do_programa():
     print("""
@@ -39,7 +42,7 @@ def excolher_opcoes():
             case 2:
                 listar_restaurantes_cadastrados()
             case 3:
-                print('Ativar restaurantes')
+                alternar_estado_restaurante()
             case 4:
                 finalizar_app()
             case _:
@@ -50,24 +53,49 @@ def excolher_opcoes():
 def cadastrar_novo_restaurante():
     exibir_subtitulo('Cadastro de novos restaurantes')
 
-    nome_do_restaurante = input('Digite o nome do restaurante que deseja cadastrar: ')
-    restaurantes.append(nome_do_restaurante)
+    nome_do_restaurante = input('Digite o nome do restaurante: ')
+    categoria_do_restaurante = input(f'Digite a categoria do restaurante {nome_do_restaurante}: ')
+    
+    restaurantes.append({'nome':nome_do_restaurante, 'categoria':categoria_do_restaurante, 'ativo':False})
 
     print(f'O restaurante {nome_do_restaurante} foi cadastrado com sucesso!\n')
     voltar_ao_menu_principal()
 
+def alternar_estado_restaurante():
+    exibir_subtitulo('Alterando estado do restaurante')
+    nome_do_restaurante  = input('Digite o nome do restaurante que deseja: ')
+
+    restaurante_encontrado = False
+    for restaurante in restaurantes:
+        if nome_do_restaurante == restaurante['nome']:
+            restaurante_encontrado = True
+            restaurante['ativo'] = not restaurante['ativo']
+            mensagem = (f'O resturante {nome_do_restaurante} foi ativado com sucesso' 
+            if restaurante['ativo'] else f'O resturante {nome_do_restaurante} fopi desativado com sucesso')
+            print(mensagem)
+    if not restaurante_encontrado:
+        print('O restaurante não foi encontrado')
+    voltar_ao_menu_principal()
+
+
 def listar_restaurantes_cadastrados():
     exibir_subtitulo('Listanto os restaurantes')
 
+    print(f' {"Nome do restaurante".ljust(22)} | {"Categoria".ljust(20)} | Status')
     for restaurante in restaurantes:
-        print(f'.{restaurante}')
+        nome = restaurante['nome']
+        categoria = restaurante['nome']
+        ativo = 'ativado' if restaurante['ativo'] else 'desativado'
+        print(f' - {nome.ljust(20)} | {categoria.ljust(20)} | {ativo}')
 
     voltar_ao_menu_principal()
 
 def exibir_subtitulo(texto):
     os.system('clear')
+    linha = '*' * (len(texto))
+    print(linha)
     print(texto)
-    print()
+    print(linha)
 
 def main():
     os.system('clear')
